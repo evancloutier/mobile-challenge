@@ -1,0 +1,23 @@
+{
+  "name": "mobile-challenge-server",
+  "version": "1.0.0",
+  "description": "oauth backend for 500px mobile challenge",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Evan Cloutier",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.5",
+    "express": "^4.14.1",
+    "express-session": "^1.15.0",
+    "method-override": "^2.3.7",
+    "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-500px": "^0.2.1",
+    "util": "^0.10.3"
+  }
+}
