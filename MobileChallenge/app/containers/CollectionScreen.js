@@ -8,7 +8,7 @@ import { StackNavigator } from 'react-navigation'
 import PhotoGrid from '../components/PhotoGrid'
 import styles from './styles/CollectionScreenStyle'
 
-// const url = 'https://api.500px.com/v1/photos?consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
+
 
 
 class CollectionScreen extends Component {
@@ -22,10 +22,16 @@ class CollectionScreen extends Component {
   }
 
   componentDidMount() {
-    let items = Array.apply(null, Array(60)).map((v, i) => {
-      return { id: i, src: 'https://unsplash.it/600/400/?image='+(i+1) }
+    this._fetchPhotoData().then((data) => {
+      console.log(data)
+      const photos = data.photos
+
+      let items = Array.apply(null, Array(20)).map((v, i) => {
+        return { id: i, src: photos[i].image_url }
+      })
+
+      this.setState({ items })
     })
-    this.setState({ items })
   }
 
   render() {
@@ -44,8 +50,6 @@ class CollectionScreen extends Component {
   }
 
   _renderItem(item, itemSize) {
-    console.log(this)
-
     return (
       <TouchableOpacity
         key = { item.id }
@@ -59,6 +63,21 @@ class CollectionScreen extends Component {
         />
       </TouchableOpacity>
     )
+  }
+
+  _fetchPhotoData() {
+    return new Promise((resolve, reject) => {
+      fetch('https://api.500px.com/v1/photos?consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED')
+      .then((response) => {
+        return response.json()
+      })
+      .then((data) => {
+        return resolve(data)
+      })
+      .catch((error) => {
+        return reject(error)
+      })
+    })
   }
 }
 
