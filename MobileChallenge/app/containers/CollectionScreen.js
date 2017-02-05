@@ -8,7 +8,7 @@ import { StackNavigator } from 'react-navigation'
 import PhotoGrid from '../components/PhotoGrid'
 import styles from './styles/CollectionScreenStyle'
 
-
+const COLLECTION_URL = 'https://api.500px.com/v1/photos?feature=popular&rpp=21&image_size=3&consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
 
 
 class CollectionScreen extends Component {
@@ -22,12 +22,11 @@ class CollectionScreen extends Component {
   }
 
   componentDidMount() {
-    this._fetchPhotoData().then((data) => {
-      console.log(data)
+    this._fetchPhotoCollection().then((data) => {
       const photos = data.photos
 
-      let items = Array.apply(null, Array(20)).map((v, i) => {
-        return { id: i, src: photos[i].image_url }
+      let items = Array.apply(null, Array(21)).map((v, i) => {
+        return { id: i, photo: photos[i] }
       })
 
       this.setState({ items })
@@ -54,20 +53,20 @@ class CollectionScreen extends Component {
       <TouchableOpacity
         key = { item.id }
         style = {{ width: itemSize, height: itemSize }}
-        onPress={(event) => this.navigation.navigate('Image', { photo: item.src })}
+        onPress = {(event) => this.navigation.navigate('Image', { id: item.photo.id })}
       >
         <Image
           resizeMode = "cover"
           style = {{ flex: 1 }}
-          source = {{ uri: item.src }}
+          source = {{ uri: item.photo.image_url }}
         />
       </TouchableOpacity>
     )
   }
 
-  _fetchPhotoData() {
+  _fetchPhotoCollection() {
     return new Promise((resolve, reject) => {
-      fetch('https://api.500px.com/v1/photos?consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED')
+      fetch(COLLECTION_URL)
       .then((response) => {
         return response.json()
       })

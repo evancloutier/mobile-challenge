@@ -38,8 +38,8 @@ class PhotoGrid extends React.Component {
   _buildRows(items, itemsPerRow = 3) {
     return items.reduce((rows, item, idx) => {
       // If a full row is filled create a new row array
-      if(idx % itemsPerRow === 0 && idx > 0) rows.push([]);
-      rows[rows.length-1].push(item);
+      if (idx % itemsPerRow === 0 && idx > 0) rows.push([]);
+      rows[rows.length - 1].push(item);
       return rows;
     }, [[]]);
   }
