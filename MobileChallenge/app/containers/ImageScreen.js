@@ -13,7 +13,7 @@ const CONSUMER_KEY = '?consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
 class ImageScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = { photo: {} }
+    this.state = { page: null, key: null, items: [] }
   }
 
   static navigationOptions = {
@@ -21,43 +21,43 @@ class ImageScreen extends Component {
   }
 
   componentDidMount() {
-    this._fetchPhotoData().then((photo) => {
-      console.log(photo)
-      this.setState({ photo })
-    })
+    const page = this.props.navigation.state.params.page
+    const key = this.props.navigation.state.params.key
+    const items = this.props.navigation.state.params.array
+
+    this.setState({ page, key, items })
   }
 
   render() {
+    console.log(this)
     const deviceWidth = Dimensions.get('window').width
     const deviceHeight = Dimensions.get('window').height
 
     return (
-      <View style={ styles.display }>
-        <Image
-          style = {{ width: deviceWidth, height: deviceHeight }}
-          resizeMode = "contain"
-          source = {{ uri: this.state.photo.image_url }}
-        />
+      <View style = { styles.display }>
+        <Text>Load gallery here</Text>
       </View>
     )
   }
 
-  _fetchPhotoData() {
-    return new Promise((resolve, reject) => {
-      const { params } = this.props.navigation.state
-
-      fetch(PHOTO_URL + params.id + CONSUMER_KEY)
-      .then((response) => {
-        return response.json()
-      })
-      .then((data) => {
-        return resolve(data.photo)
-      })
-      .catch((error) => {
-        return reject(error)
-      })
-    })
-  }
+  // Turn this into pagination function based on page number?
+  // _fetchPhotoData() {
+  //   return new Promise((resolve, reject) => {
+  //     const { params } = this.props.navigation.state
+  //     console.log(params)
+  //
+  //     fetch(PHOTO_URL + params.array[] + CONSUMER_KEY)
+  //     .then((response) => {
+  //       return response.json()
+  //     })
+  //     .then((data) => {
+  //       return resolve(data.photo)
+  //     })
+  //     .catch((error) => {
+  //       return reject(error)
+  //     })
+  //   })
+  // }
 }
 
 export default ImageScreen

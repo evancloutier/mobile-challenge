@@ -14,7 +14,7 @@ const COLLECTION_URL = 'https://api.500px.com/v1/photos?feature=popular&rpp=21&i
 class CollectionScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = { items: [] }
+    this.state = { page: null, items: [] }
   }
 
   static navigationOptions = {
@@ -23,13 +23,14 @@ class CollectionScreen extends Component {
 
   componentDidMount() {
     this._fetchPhotoCollection().then((data) => {
+      const page = data.current_page
       const photos = data.photos
 
       let items = Array.apply(null, Array(21)).map((v, i) => {
         return { id: i, photo: photos[i] }
       })
 
-      this.setState({ items })
+      this.setState({ page, items })
     })
   }
 
@@ -44,16 +45,18 @@ class CollectionScreen extends Component {
         renderHeader = { this._renderHeader }
         renderItem = { this._renderItem }
         navigation = { navigate }
+        page = { this.state.page }
       />
     )
   }
 
   _renderItem(item, itemSize) {
+  
     return (
       <TouchableOpacity
         key = { item.id }
         style = {{ width: itemSize, height: itemSize }}
-        onPress = {(event) => this.navigation.navigate('Image', { id: item.photo.id })}
+        onPress = {(event) => this.navigation.navigate('Image', { page: this.page, key: item.id, array: this.data })}
       >
         <Image
           resizeMode = "cover"
