@@ -10,17 +10,35 @@ const CollectionStack = StackNavigator({
   Collection: {
     name: 'Collection Screen',
     description: 'Initial screen for viewing photos',
-    screen: CollectionScreen
+    screen: CollectionScreen,
+    navigationOptions: {
+      header: {
+        title: 'Collections',
+        style: {
+          backgroundColor: 'red'
+        }
+      }
+    }
   },
   Image: {
     name: 'Full Image Screen',
     description: 'Scroll view for viewing full-size photos',
-    screen: ImageScreen
+    screen: ImageScreen,
+    navigationOptions: {
+      header: {
+        title: '',
+        style: {
+          borderColor: 'red',
+          backgroundColor: 'black',
+        }
+      }
+    }
   }
 
 
 }, {
-  initialRouteName: 'Collection'
+  headerMode: 'screen',
+  initialRouteName: 'Collection',
 })
 
 export default CollectionStack

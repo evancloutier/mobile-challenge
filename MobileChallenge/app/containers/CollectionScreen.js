@@ -3,12 +3,12 @@
 import React, { Component } from 'react'
 import { Image, TouchableOpacity, Text } from 'react-native'
 import { StackNavigator } from 'react-navigation'
-
-// Import styles and components
 import PhotoGrid from '../components/PhotoGrid'
 import styles from './styles/CollectionScreenStyle'
 
-const COLLECTION_URL = 'https://api.500px.com/v1/photos?feature=popular&rpp=10&image_size=3&consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
+const COLLECTION_URL = 'https://api.500px.com/v1/photos?feature=popular&rpp=10&image_size=3,6'
+const CONSUMER_KEY = '&consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
+
 
 class CollectionScreen extends Component {
   constructor(props) {
@@ -16,13 +16,12 @@ class CollectionScreen extends Component {
     this.state = { page: null, items: [] }
   }
 
-  static navigationOptions = {
-    title: 'Collections'
-  }
-
   componentDidMount() {
     this._fetchPhotoCollection().then((data) => {
-      const page = data.current_page
+      const page = {
+        current: data.current_page,
+        total: data.total_pages
+      }
       const photos = data.photos
 
       let items = Array.apply(null, Array(photos.length)).map((v, i) => {
@@ -49,8 +48,8 @@ class CollectionScreen extends Component {
     )
   }
 
+  // TO-DO: Render items according to aspect ratio within grid
   _renderItem(item, itemSize) {
-
     return (
       <TouchableOpacity
         key = { item.id }
@@ -58,8 +57,8 @@ class CollectionScreen extends Component {
         onPress = {(event) => this.navigation.navigate('Image', { page: this.page, key: item.id, array: this.data })}
       >
         <Image
-          resizeMode = "cover"
           style = {{ flex: 1 }}
+          resizeMode = "contain"
           source = {{ uri: item.photo.image_url }}
         />
       </TouchableOpacity>
@@ -68,7 +67,7 @@ class CollectionScreen extends Component {
 
   _fetchPhotoCollection() {
     return new Promise((resolve, reject) => {
-      fetch(COLLECTION_URL)
+      fetch(COLLECTION_URL + CONSUMER_KEY)
       .then((response) => {
         return response.json()
       })

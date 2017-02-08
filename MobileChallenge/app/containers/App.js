@@ -11,16 +11,26 @@ const AppNavigator = StackNavigator({
   Login: {
     name: 'Login Screen',
     description: 'Initial log in screen',
-    screen: LoginScreen
+    screen: LoginScreen,
+    navigationOptions: {
+      header: {
+        visible: false,
+      }
+    }
   },
   CollectionStack: {
     name: 'Collection Stack',
     description: 'StackNavigator for photo collection',
-    screen: CollectionStack
+    screen: CollectionStack,
+    navigationOptions: {
+      header: {
+        visible: false
+      }
+    }
   }
 }, {
+  headerMode: 'screen',
   initialRouteName: 'Login',
-  headerMode: 'none',
 })
 
 export default () => <AppNavigator />
