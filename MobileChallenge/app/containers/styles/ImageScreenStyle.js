@@ -1,11 +1,14 @@
 'use strict'
 
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
+
+const { width, height } = Dimensions.get('window')
 
 export default StyleSheet.create({
-  display: {
-    flex: 1,
-    flexDirection: 'column',
+  container: {
+    flex: 1
+  },
+  slide: {
     justifyContent: 'center',
     alignItems: 'center',
   }

@@ -8,8 +8,7 @@ import { StackNavigator } from 'react-navigation'
 import PhotoGrid from '../components/PhotoGrid'
 import styles from './styles/CollectionScreenStyle'
 
-const COLLECTION_URL = 'https://api.500px.com/v1/photos?feature=popular&rpp=21&image_size=3&consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
-
+const COLLECTION_URL = 'https://api.500px.com/v1/photos?feature=popular&rpp=10&image_size=3&consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
 
 class CollectionScreen extends Component {
   constructor(props) {
@@ -26,7 +25,7 @@ class CollectionScreen extends Component {
       const page = data.current_page
       const photos = data.photos
 
-      let items = Array.apply(null, Array(21)).map((v, i) => {
+      let items = Array.apply(null, Array(photos.length)).map((v, i) => {
         return { id: i, photo: photos[i] }
       })
 
@@ -40,7 +39,7 @@ class CollectionScreen extends Component {
     return (
       <PhotoGrid
         data = { this.state.items }
-        itemsPerRow = { 3 }
+        itemsPerRow = { 2 }
         itemMargin = { 1 }
         renderHeader = { this._renderHeader }
         renderItem = { this._renderItem }
@@ -51,7 +50,7 @@ class CollectionScreen extends Component {
   }
 
   _renderItem(item, itemSize) {
-  
+
     return (
       <TouchableOpacity
         key = { item.id }
