@@ -16,22 +16,18 @@ class ImageScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      page: '',
+      key: '',
+      items: []
+    }
+  }
+
+  componentWillMount() {
+    this.setState({
       page: this.props.navigation.state.params.page,
       key: this.props.navigation.state.params.key,
-      items: this.props.navigation.state.params.array,
-    }
-    this._fetchNextPage = this._fetchNextPage.bind(this)
-  }
-
-  // Update the parent state to push in new items
-  _renderNewItems(index, items) {
-    let oldItems = this.state.items
-    let newItems = oldItems.concat(items)
-    this.setState({ items: newItems, key: index })
-  }
-
-  _renderNewPage(page) {
-    this.setState({ page: page })
+      items: this.props.navigation.state.params.array
+    })
   }
 
   render() {
@@ -40,11 +36,10 @@ class ImageScreen extends Component {
         showsButtons
         loop = { false }
         index = { this.state.key }
-        renderPagination = { this._renderPagination }
+        onMomentumScrollEnd = { this._onMomentumScrollEnd.bind(this) }
+        renderPagination = { this._renderPagination.bind(this) }
         renderNewItems = { this._renderNewItems.bind(this) }
-        renderNewPage = { this._renderNewPage.bind(this) }
-        fetchNextPage = { this._fetchNextPage }
-        page = { this.state.page }>
+        fetchNextPage = { this._fetchNextPage.bind(this) }>
         { this.state.items.map((item, key) => {
           return (
             <View key = { key } style = { styles.slide }>
@@ -60,26 +55,22 @@ class ImageScreen extends Component {
     )
   }
 
+  _renderNewItems(index, items) {
+    let oldItems = this.state.items
+    let newItems = oldItems.concat(items)
+    this.setState({ items: newItems, key: index })
+  }
+
   _renderPagination(index, total, context) {
-    let currentPage = Math.ceil((index / total))
-    if (index == 0) currentPage = 1
-
-    console.log('Index: ' + index)
-    console.log('Total: ' + total)
-    console.log('Current page: ' + currentPage)
-
-    // Add more photos when index is the second last item
     if (index >= (total - 3)) {
-      this.fetchNextPage().then((data) => {
-        // Here is where we will update the state
+      this._fetchNextPage().then((data) => {
         const photos = data.photos
 
         let items = Array.apply(null, Array(photos.length)).map((v, i) => {
           return { id: i, photo: photos[i] }
         })
 
-        // Pass in the index because we want to retain our location
-        this.renderNewItems(index, items)
+        return this._renderNewItems(index, items)
       })
     }
   }
@@ -105,6 +96,24 @@ class ImageScreen extends Component {
         })
       }
     })
+  }
+
+  _onMomentumScrollEnd(e, state, context) {
+    const photoPage = Math.floor(state.index / 10) + 1
+    const statePage = this.state.page.current
+    console.log('Current page: ' + photoPage)
+    console.log('State page: ' + statePage)
+
+
+    if (photoPage !== statePage) {
+      this._renderNewPage(photoPage)
+    }
+  }
+
+  _renderNewPage(page) {
+    let newPage = this.state.page
+    newPage.current = page
+    this.setState({ page: newPage })
   }
 }
 

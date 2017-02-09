@@ -14,9 +14,6 @@ const CollectionStack = StackNavigator({
     navigationOptions: {
       header: {
         title: 'Collections',
-        style: {
-          backgroundColor: 'red'
-        }
       }
     }
   },
