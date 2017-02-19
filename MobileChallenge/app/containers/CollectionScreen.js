@@ -3,13 +3,14 @@
 import React, { Component } from 'react'
 import { Image, TouchableOpacity, Text } from 'react-native'
 import { StackNavigator } from 'react-navigation'
+import GiftedListView from 'react-native-gifted-listview'
 import PhotoGrid from '../components/PhotoGrid'
 import styles from './styles/CollectionScreenStyle'
 
 const COLLECTION_URL = 'https://api.500px.com/v1/photos?feature=popular&rpp=10&image_size=3,6'
 const CONSUMER_KEY = '&consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
 
-
+// Need to trim the shit out of this class
 class CollectionScreen extends Component {
   constructor(props) {
     super(props)
@@ -54,7 +55,6 @@ class CollectionScreen extends Component {
       <TouchableOpacity
         key = { item.id }
         style = {{ width: itemSize, height: itemSize }}
-        onPress = {(event) => this.navigation.navigate('Image', { page: this.page, key: item.id, array: this.data })}
       >
         <Image
           style = {{ flex: 1 }}

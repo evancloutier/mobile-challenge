@@ -4,13 +4,14 @@ import React, { Component } from 'react'
 import { StackNavigator } from 'react-navigation'
 
 import CollectionScreen from './CollectionScreen'
+import GiftedCollectionScreen from './GiftedCollectionScreen'
 import ImageScreen from './ImageScreen'
 
 const CollectionStack = StackNavigator({
   Collection: {
     name: 'Collection Screen',
     description: 'Initial screen for viewing photos',
-    screen: CollectionScreen,
+    screen: GiftedCollectionScreen,
     navigationOptions: {
       header: {
         title: 'Collections',

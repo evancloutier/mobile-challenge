@@ -25,7 +25,6 @@ class PhotoGrid extends React.Component {
 
   render() {
     let rows = this._buildRows(this.props.data, this.props.itemsPerRow)
-    console.log(this)
 
     return (
       <ListView

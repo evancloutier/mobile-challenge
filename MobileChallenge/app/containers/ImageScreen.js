@@ -23,6 +23,8 @@ class ImageScreen extends Component {
   }
 
   componentWillMount() {
+    console.log(this)
+
     this.setState({
       page: this.props.navigation.state.params.page,
       key: this.props.navigation.state.params.key,
