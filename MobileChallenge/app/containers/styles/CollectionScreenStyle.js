@@ -3,12 +3,15 @@
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
   row: {
-    padding: 10,
-    height: 44,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 2
+  },
+  photo: {
+    flex: 1,
+    marginLeft: 2,
+    marginRight: 2
   }
 })

@@ -34,83 +34,21 @@ export default class GiftedListView extends Component {
     this._setPage(1)
     this._setRows([])
 
-    if (this.props.withSections === true) {
-      ds = new ListView.DataSource({
-        rowHasChanged: this.props.rowHasChanged?this.props.rowHasChanged:(row1, row2) => row1 !== row2,
-        sectionHeaderHasChanged: (section1, section2) => section1 !== section2,
-      })
-      this.state = {
-        dataSource: ds.cloneWithRowsAndSections(this._getRows()),
-        isRefreshing: false,
-        paginationStatus: 'firstLoad',
-        isMounted: false,
-      }
-    } else {
-      ds = new ListView.DataSource({
-        rowHasChanged: this.props.rowHasChanged?this.props.rowHasChanged:(row1, row2) => row1 !== row2,
-      })
-      this.state = {
-        dataSource: ds.cloneWithRows(this._getRows()),
-        isRefreshing: false,
-        paginationStatus: 'firstLoad',
-        isMounted: false,
-      }
+    ds = new ListView.DataSource({
+      rowHasChanged: this.props.rowHasChanged ? this.props.rowHasChanged: (row1, row2) => row1 !== row2,
+    })
+    this.state = {
+      dataSource: ds.cloneWithRows(this._getRows()),
+      isRefreshing: false,
+      paginationStatus: 'firstLoad',
+      isMounted: false
     }
-  }
-
-  static defaultProps = {
-    customStyles: {},
-    initialListSize: 10,
-    firstLoader: true,
-    pagination: true,
-    refreshable: true,
-    refreshableColors: undefined,
-    refreshableProgressBackgroundColor: undefined,
-    refreshableSize: undefined,
-    refreshableTitle: undefined,
-    refreshableTintColor: undefined,
-    renderRefreshControl: null,
-    headerView: null,
-    sectionHeaderView: null,
-    scrollEnabled: true,
-    withSections: false,
-    onFetch(page) { console.log('default loaded') },
-    buildRows(items) { console.log('default loaded') },
-
-    paginationFetchingView: null,
-    paginationAllLoadedView: null,
-    paginationWaitingView: null,
-    emptyView: null,
-    renderSeparator: null,
-    rowHasChanged:null,
-  }
-
-  static propTypes = {
-    customStyles: React.PropTypes.object,
-    initialListSize: React.PropTypes.number,
-    firstLoader: React.PropTypes.bool,
-    pagination: React.PropTypes.bool,
-    refreshable: React.PropTypes.bool,
-    refreshableColors: React.PropTypes.array,
-    refreshableProgressBackgroundColor: React.PropTypes.string,
-    refreshableSize: React.PropTypes.string,
-    refreshableTitle: React.PropTypes.string,
-    refreshableTintColor: React.PropTypes.string,
-    renderRefreshControl: React.PropTypes.func,
-    headerView: React.PropTypes.func,
-    sectionHeaderView: React.PropTypes.func,
-    scrollEnabled: React.PropTypes.bool,
-    withSections: React.PropTypes.bool,
-    onFetch: React.PropTypes.func,
-    buildRows: React.PropTypes.func,
-    rowHasChanged:React.PropTypes.func,
   }
 
   _setPage(page) { this._page = page }
   _getPage() { return this._page }
   _setRows(rows) { this._rows = rows }
   _getRows() { return this._rows }
-
 
   _isMounted() {
     return this.state.isMounted
@@ -121,24 +59,6 @@ export default class GiftedListView extends Component {
       <View>
         <ActivityIndicator />
       </View>
-    )
-  }
-
-  paginationWaitingView(paginateCallback) {
-    if (this.props.paginationWaitingView) {
-      return this.props.paginationWaitingView(paginateCallback)
-    }
-
-    return (
-      <TouchableHighlight
-        underlayColor='#c8c7cc'
-        onPress={paginateCallback}
-        style={[defaultStyles.paginationView, this.props.customStyles.paginationView]}
-      >
-        <Text style={[defaultStyles.actionsLabel, this.props.customStyles.actionsLabel]}>
-          Load more
-        </Text>
-      </TouchableHighlight>
     )
   }
 
@@ -178,8 +98,6 @@ export default class GiftedListView extends Component {
   }
 
   _onRefresh(options = {}) {
-    console.log(this)
-
     if (this._isMounted()) {
       this.setState({
         isRefreshing: true,
@@ -205,7 +123,6 @@ export default class GiftedListView extends Component {
       this.setState({
         paginationStatus: 'fetching',
       })
-      console.log(this._getPage())
 
       this.props.onFetch(this._getPage() + 1).then((data) => {
         this._postPaginate(data, { firstLoad: false })
@@ -239,22 +156,6 @@ export default class GiftedListView extends Component {
         isRefreshing: false,
         paginationStatus: (options.allLoaded === true ? 'allLoaded' : 'waiting')
       })
-    }
-  }
-
-  _renderPaginationView() {
-    console.log('Rendering pagination view...')
-
-    if ((this.state.paginationStatus === 'fetching' && this.props.pagination === true) || (this.state.paginationStatus === 'firstLoad' && this.props.firstLoader === true)) {
-      return this.paginationFetchingView()
-    } else if (this.state.paginationStatus === 'waiting' && this.props.pagination === true && (this.props.withSections === true || this._getRows().length > 0)) {
-      return this.paginationWaitingView(this._onPaginate)
-    } else if (this.state.paginationStatus === 'allLoaded' && this.props.pagination === true) {
-      return this.paginationAllLoadedView()
-    } else if (this._getRows().length === 0) {
-      return this.emptyView(this._onRefresh)
-    } else {
-      return null
     }
   }
 
