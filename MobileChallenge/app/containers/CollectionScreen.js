@@ -71,7 +71,7 @@ class GiftedCollectionScreen extends Component {
       <TouchableOpacity
         key = { item.id }
         style = {{ width: itemWidth, height: itemHeight }}
-        onPress = { (event) => this.navigation.navigate('Image', { page: page, key: item.id, array: rows }) }
+        onPress = { (event) => this.navigation.navigate('Image', { page: page, key: item.id, array: rows, name: item.photo.name }) }
       >
         <Image
           style = { styles.photo }

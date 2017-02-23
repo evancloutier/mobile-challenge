@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import { Text, View, Image, Button, TouchableOpacity, Dimensions, Platform } from 'react-native'
 import { StackNavigator } from 'react-navigation'
-import NavigationBar from 'react-native-navbar'
 import Swiper from 'react-native-swiper'
 import Icon from 'react-native-vector-icons/Ionicons'
 import styles from './styles/ImageScreenStyle'
@@ -21,6 +20,35 @@ class ImageScreen extends Component {
       items: []
     }
   }
+
+  static navigationOptions = {
+    header: (navigation, header) => ({
+      title: navigation.state.params.name,
+      titleStyle: {
+        color: 'white',
+      },
+      style: {
+        backgroundColor: 'black',
+      },
+      ...Platform.select({
+        ios: {
+          left: (
+            <TouchableOpacity onPress = { () => navigation.goBack() }>
+              <Icon name = 'ios-arrow-back' color = '#fff' size = { 25 } style = {{ paddingLeft: 15 }}/>
+            </TouchableOpacity>
+          )
+        },
+        android: {
+          left: (
+            <TouchableOpacity onPress = { () => navigation.goBack() }>
+              <Icon name = 'md-arrow-back' color = '#fff' size = { 25 } style = {{ paddingLeft: 15 }}/>
+            </TouchableOpacity>
+          )
+        }
+      })
+    })
+  }
+
 
   componentWillMount() {
     const items = this._transformPhotoArray(this.props.navigation.state.params.array)
@@ -52,45 +80,8 @@ class ImageScreen extends Component {
         renderNewItems = { this._renderNewItems.bind(this) }
         fetchNextPage = { this._fetchNextPage.bind(this) }>
         { this.state.items.map((item, key) => {
-
-          const titleConfig = {
-            title: item.photo.name.length > 25 ? item.photo.name.substring(0, 22) + '...' : item.photo.name,
-            style: {
-              color: '#fff',
-              fontSize: 17,
-              fontWeight: '500',
-              letterSpacing: 0
-            }
-          }
-
-          // Why are these buttons so sensitive!
-          const leftButtonConfig = Platform.select({
-            ios: (
-              <TouchableOpacity
-                style = { styles.navBarButton }
-                hitSlop = {{ top: 100, left: 100, bottom: 100, right: 100 }}
-                onPress = { () => console.log('Pressed') }>
-                <Icon name = 'ios-arrow-back' size = { 25 } color = '#fff'/>
-              </TouchableOpacity>
-            ),
-            android: (
-              <TouchableOpacity
-                style = { styles.navBarButton }
-                hitSlop = {{ top: 100, left: 100, bottom: 100, right: 100 }}
-                onPress = { () => console.log('Pressed') }>
-                <Icon name = 'md-arrow-back' size = { 25 } color = '#fff'/>
-              </TouchableOpacity>
-            )
-          })
-
           return (
             <View key = { key } style = { styles.slide }>
-              <NavigationBar
-                title = { titleConfig }
-                leftButton = { leftButtonConfig }
-                style = { styles.navBar }
-                statusBar = {{ tintColor: 'black' }}
-              />
               <Image
                 style = { styles.image }
                 resizeMode = 'contain'
@@ -106,8 +97,6 @@ class ImageScreen extends Component {
   _renderNewItems(index, items) {
     let oldItems = this.state.items
     let newItems = oldItems.concat(items)
-    console.log(oldItems)
-    console.log(newItems)
 
     this.setState({
       items: newItems,
@@ -154,9 +143,9 @@ class ImageScreen extends Component {
   _onMomentumScrollEnd(e, state, context) {
     const photoPage = Math.floor(state.index / 20) + 1
     const statePage = this.state.page
-    console.log('Current page: ' + photoPage)
-    console.log('State page: ' + statePage)
 
+    const { setParams } = this.props.navigation
+    setParams({ name: this.state.items[state.index].photo.name })
 
     if (photoPage !== statePage) {
       this._renderNewPage(photoPage)

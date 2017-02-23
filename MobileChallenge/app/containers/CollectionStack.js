@@ -13,7 +13,7 @@ const CollectionStack = StackNavigator({
     screen: CollectionScreen,
     navigationOptions: {
       header: {
-        title: 'Collections',
+        title: 'Popular on 500px',
       }
     }
   },
@@ -21,11 +21,6 @@ const CollectionStack = StackNavigator({
     name: 'Full Image Screen',
     description: 'Scroll view for viewing full-size photos',
     screen: ImageScreen,
-    navigationOptions: {
-      header: {
-        visible: false
-      }
-    }
   }
 
 
