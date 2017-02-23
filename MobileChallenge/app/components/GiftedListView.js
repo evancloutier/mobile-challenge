@@ -9,28 +9,15 @@ import {
   ActivityIndicator,
 } from 'react-native'
 
-// small helper function which merges two objects into one
-function MergeRecursive(obj1, obj2) {
-  for (let p in obj2) {
-    try {
-      if ( obj2[p].constructor == Object ) {
-        obj1[p] = MergeRecursive(obj1[p], obj2[p])
-      } else {
-        obj1[p] = obj2[p]
-      }
-    } catch(e) {
-      obj1[p] = obj2[p]
-    }
-  }
-  return obj1
-}
+import Orientation from 'react-native-orientation'
 
 export default class GiftedListView extends Component {
   constructor (props) {
     super(props)
 
-    let ds = null
+    const init = Orientation.getInitialOrientation()
 
+    let ds = null
     this._setPage(1)
     this._setRows([])
 
@@ -38,11 +25,16 @@ export default class GiftedListView extends Component {
       rowHasChanged: this.props.rowHasChanged ? this.props.rowHasChanged: (row1, row2) => row1 !== row2,
     })
     this.state = {
+
       dataSource: ds.cloneWithRows(this._getRows()),
       isRefreshing: false,
       paginationStatus: 'firstLoad',
-      isMounted: false
+      isMounted: false,
+      or: init
     }
+
+    this._updateOrientation = this._updateOrientation.bind(this)
+    Orientation.addOrientationListener(this._updateOrientation)
   }
 
   _setPage(page) { this._page = page }
@@ -95,6 +87,10 @@ export default class GiftedListView extends Component {
 
   componentWillUnmount() {
     this.state.isMounted = false
+  }
+
+  _updateOrientation(or) {
+    this.props.onRotate(this._page, this._rows)
   }
 
   _onRefresh(options = {}) {
@@ -187,4 +183,20 @@ export default class GiftedListView extends Component {
       />
     )
   }
+}
+
+// Helper function which merges two objects into one
+function MergeRecursive(obj1, obj2) {
+  for (let p in obj2) {
+    try {
+      if ( obj2[p].constructor == Object ) {
+        obj1[p] = MergeRecursive(obj1[p], obj2[p])
+      } else {
+        obj1[p] = obj2[p]
+      }
+    } catch(e) {
+      obj1[p] = obj2[p]
+    }
+  }
+  return obj1
 }

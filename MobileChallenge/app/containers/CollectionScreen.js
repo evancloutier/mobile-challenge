@@ -36,6 +36,14 @@ class GiftedCollectionScreen extends Component {
     })
   }
 
+  _onRotate(page, rows) {
+    console.log(this)
+
+    const rotatedRows = rows.map((row) => {
+      return this.rowView(row)
+    })
+  }
+
   _buildRows(items) {
     return items.reduce((rows, item, idx) => {
       if (idx % 2 === 0 && idx > 0) rows.push([])
@@ -63,7 +71,6 @@ class GiftedCollectionScreen extends Component {
       <TouchableOpacity
         key = { item.id }
         style = {{ width: itemWidth, height: itemHeight }}
-
         onPress = { (event) => this.navigation.navigate('Image', { page: page, key: item.id, array: rows }) }
       >
         <Image
@@ -114,6 +121,7 @@ class GiftedCollectionScreen extends Component {
   }
 
   render() {
+    console.log('Rendering...')
     const navigate = this.props.navigation
 
     return (
@@ -125,6 +133,7 @@ class GiftedCollectionScreen extends Component {
           onFetch = { this._onFetch }
           buildRows = { this._buildRows }
           navigation = { navigate }
+          onRotate = { this._onRotate }
           firstLoader = { true }
           pagination = { true }
           refreshable = { true }

@@ -3,13 +3,12 @@
 import React, { Component } from 'react'
 import { Text, View, Image, Button, TouchableOpacity, Dimensions, Platform } from 'react-native'
 import { StackNavigator } from 'react-navigation'
+import NavigationBar from 'react-native-navbar'
 import Swiper from 'react-native-swiper'
 import Icon from 'react-native-vector-icons/Ionicons'
 import styles from './styles/ImageScreenStyle'
 
 const { width, height } = Dimensions.get('window')
-
-
 const COLLECTION_URL = 'https://api.500px.com/v1/photos?feature=popular&rpp=20&image_size=6'
 const CONSUMER_KEY = '&consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
 
@@ -21,31 +20,6 @@ class ImageScreen extends Component {
       key: '',
       items: []
     }
-  }
-
-  static navigationOptions = {
-    header: (navigation, header) => ({
-      title: '',
-      style: {
-        backgroundColor: 'black'
-      },
-      ...Platform.select({
-        ios: {
-          left: (
-            <TouchableOpacity onPress = { () => navigation.goBack() }>
-              <Icon name="ios-arrow-back" color = "#ffffff" size = { 40 } style = {{ paddingLeft: 15 }}/>
-            </TouchableOpacity>
-          )
-        },
-        android: {
-          left: (
-            <TouchableOpacity onPress = { () => navigation.goBack() }>
-              <Icon name="md-arrow-back" color = "#ffffff" size = { 40 } style = {{ paddingLeft: 15 }}/>
-            </TouchableOpacity>
-          )
-        }
-      })
-    })
   }
 
   componentWillMount() {
@@ -78,10 +52,47 @@ class ImageScreen extends Component {
         renderNewItems = { this._renderNewItems.bind(this) }
         fetchNextPage = { this._fetchNextPage.bind(this) }>
         { this.state.items.map((item, key) => {
+
+          const titleConfig = {
+            title: item.photo.name.length > 25 ? item.photo.name.substring(0, 22) + '...' : item.photo.name,
+            style: {
+              color: '#fff',
+              fontSize: 17,
+              fontWeight: '500',
+              letterSpacing: 0
+            }
+          }
+
+          // Why are these buttons so sensitive!
+          const leftButtonConfig = Platform.select({
+            ios: (
+              <TouchableOpacity
+                style = { styles.navBarButton }
+                hitSlop = {{ top: 100, left: 100, bottom: 100, right: 100 }}
+                onPress = { () => console.log('Pressed') }>
+                <Icon name = 'ios-arrow-back' size = { 25 } color = '#fff'/>
+              </TouchableOpacity>
+            ),
+            android: (
+              <TouchableOpacity
+                style = { styles.navBarButton }
+                hitSlop = {{ top: 100, left: 100, bottom: 100, right: 100 }}
+                onPress = { () => console.log('Pressed') }>
+                <Icon name = 'md-arrow-back' size = { 25 } color = '#fff'/>
+              </TouchableOpacity>
+            )
+          })
+
           return (
             <View key = { key } style = { styles.slide }>
+              <NavigationBar
+                title = { titleConfig }
+                leftButton = { leftButtonConfig }
+                style = { styles.navBar }
+                statusBar = {{ tintColor: 'black' }}
+              />
               <Image
-                style = {{ width, height, paddingBottom: 64 }}
+                style = { styles.image }
                 resizeMode = 'contain'
                 source = {{ uri: item.photo.image_url }}
               />

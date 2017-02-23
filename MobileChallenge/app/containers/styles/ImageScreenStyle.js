@@ -5,12 +5,22 @@ import { StyleSheet, Dimensions } from 'react-native'
 const { width, height } = Dimensions.get('window')
 
 export default StyleSheet.create({
-  wrapper: {
-  },
   slide: {
-    flex: 1,
+    backgroundColor: '#000',
+  },
+  navBar: {
+    backgroundColor: '#000',
+  },
+  navBarButton: {
+    left: 15,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+  },
+  image: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000'
+    bottom: 32,
+    width,
+    height,
   },
 })
