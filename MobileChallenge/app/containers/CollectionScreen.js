@@ -9,12 +9,11 @@ import styles from './styles/CollectionScreenStyle'
 const COLLECTION_URL = 'https://api.500px.com/v1/photos?feature=popular&rpp=20&image_size=6&page='
 const CONSUMER_KEY = '&consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
 
-class GiftedCollectionScreen extends Component {
+export default class GiftedCollectionScreen extends Component {
   constructor(props) {
     super(props)
   }
 
-  // We need to format the rows here
   _onFetch(page = 1) {
     return new Promise((resolve, reject) => {
       fetch(COLLECTION_URL + page + CONSUMER_KEY)
@@ -33,14 +32,6 @@ class GiftedCollectionScreen extends Component {
       .catch((error) => {
         return reject(error)
       })
-    })
-  }
-
-  _onRotate(page, rows) {
-    console.log(this)
-
-    const rotatedRows = rows.map((row) => {
-      return this.rowView(row)
     })
   }
 
@@ -133,7 +124,6 @@ class GiftedCollectionScreen extends Component {
           onFetch = { this._onFetch }
           buildRows = { this._buildRows }
           navigation = { navigate }
-          onRotate = { this._onRotate }
           firstLoader = { true }
           pagination = { true }
           refreshable = { true }
@@ -142,5 +132,3 @@ class GiftedCollectionScreen extends Component {
     )
   }
 }
-
-export default GiftedCollectionScreen

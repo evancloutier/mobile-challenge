@@ -25,7 +25,6 @@ export default class GiftedListView extends Component {
       rowHasChanged: this.props.rowHasChanged ? this.props.rowHasChanged: (row1, row2) => row1 !== row2,
     })
     this.state = {
-
       dataSource: ds.cloneWithRows(this._getRows()),
       isRefreshing: false,
       paginationStatus: 'firstLoad',
@@ -34,7 +33,7 @@ export default class GiftedListView extends Component {
     }
 
     this._updateOrientation = this._updateOrientation.bind(this)
-    Orientation.addOrientationListener(this._updateOrientation)
+    Orientation.addOrientationListener(this._updateOrientation.bind(this))
   }
 
   _setPage(page) { this._page = page }
@@ -90,7 +89,9 @@ export default class GiftedListView extends Component {
   }
 
   _updateOrientation(or) {
-    this.props.onRotate(this._page, this._rows)
+    this.props.onFetch().then((data) => {
+      this._postRefresh(data, { firstLoad: true })
+    })
   }
 
   _onRefresh(options = {}) {
@@ -165,6 +166,8 @@ export default class GiftedListView extends Component {
   }
 
   render() {
+    console.log(this)
+
     return (
       <ListView
         ref = "listview"

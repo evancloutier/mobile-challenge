@@ -11,7 +11,7 @@ const { width, height } = Dimensions.get('window')
 const COLLECTION_URL = 'https://api.500px.com/v1/photos?feature=popular&rpp=20&image_size=6'
 const CONSUMER_KEY = '&consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
 
-class ImageScreen extends Component {
+export default class ImageScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -36,19 +36,18 @@ class ImageScreen extends Component {
             <TouchableOpacity onPress = { () => navigation.goBack() }>
               <Icon name = 'ios-arrow-back' color = '#fff' size = { 25 } style = {{ paddingLeft: 15 }}/>
             </TouchableOpacity>
-          )
+          ),
         },
         android: {
           left: (
             <TouchableOpacity onPress = { () => navigation.goBack() }>
               <Icon name = 'md-arrow-back' color = '#fff' size = { 25 } style = {{ paddingLeft: 15 }}/>
             </TouchableOpacity>
-          )
+          ),
         }
       })
     })
   }
-
 
   componentWillMount() {
     const items = this._transformPhotoArray(this.props.navigation.state.params.array)
@@ -70,27 +69,34 @@ class ImageScreen extends Component {
     return items
   }
 
+  // Build footer independent of the swiper
+  // Need to contain the image to the height and width of the swiper
   render() {
     return (
-      <Swiper
-        loop = { false }
-        index = { this.state.page == 1 ? this.state.key : (this.state.key) + ((this.state.page - 1) * 20) }
-        onMomentumScrollEnd = { this._onMomentumScrollEnd.bind(this) }
-        renderPagination = { this._renderPagination.bind(this) }
-        renderNewItems = { this._renderNewItems.bind(this) }
-        fetchNextPage = { this._fetchNextPage.bind(this) }>
-        { this.state.items.map((item, key) => {
-          return (
-            <View key = { key } style = { styles.slide }>
-              <Image
-                style = { styles.image }
-                resizeMode = 'contain'
-                source = {{ uri: item.photo.image_url }}
-              />
-            </View>
-          )
-        })}
-      </Swiper>
+      <View style = { styles.container }>
+        <View style = { styles.swiperContainer }>
+          <Swiper
+            loop = { false }
+            height = { height * 0.78 }
+            index = { this.state.page == 1 ? this.state.key : (this.state.key) + ((this.state.page - 1) * 20) }
+            onMomentumScrollEnd = { this._onMomentumScrollEnd.bind(this) }
+            renderPagination = { this._renderPagination.bind(this) }
+            renderNewItems = { this._renderNewItems.bind(this) }
+            fetchNextPage = { this._fetchNextPage.bind(this) }>
+            { this.state.items.map((item, key) => {
+              return (
+                <View key = { key } style = { styles.imageContainer }>
+                  <Image resizeMode = 'contain' style = { styles.image } source = {{ uri: item.photo.image_url }}/>
+                </View>
+              )
+            })}
+          </Swiper>
+        </View>
+        <View style = { styles.footer }>
+          <Text style = {{ color: '#fff', fontWeight: '500' }}>This is some centred text</Text>
+        </View>
+      </View>
+
     )
   }
 
@@ -158,5 +164,3 @@ class ImageScreen extends Component {
   }
 
 }
-
-export default ImageScreen
