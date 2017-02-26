@@ -17,16 +17,13 @@ export default class ImageScreen extends Component {
   constructor(props) {
     super(props)
 
-    const init = Orientation.getInitialOrientation()
+    Orientation.lockToPortrait()
 
     this.state = {
       page: '',
       key: '',
-      items: []
+      items: [],
     }
-
-    this._updateOrientation = this._updateOrientation.bind(this)
-    Orientation.addOrientationListener(this._updateOrientation.bind(this))
   }
 
   static navigationOptions = {
@@ -67,10 +64,6 @@ export default class ImageScreen extends Component {
     })
   }
 
-  _updateOrientation(or) {
-
-  }
-
   _transformPhotoArray(photos) {
     let items = []
     for (const row in photos) {
@@ -96,7 +89,6 @@ export default class ImageScreen extends Component {
             renderNewItems = { this._renderNewItems.bind(this) }
             fetchNextPage = { this._fetchNextPage.bind(this) }>
             { this.state.items.map((item, key) => {
-              console.log(item)
               return (
                 <View key = { key } style = { styles.imageContainer }>
                   <Image resizeMode = 'contain' style = { styles.image } source = {{ uri: item.photo.image_url }}/>

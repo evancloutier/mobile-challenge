@@ -16,6 +16,7 @@ export default class GiftedListView extends Component {
   constructor (props) {
     super(props)
 
+    Orientation.unlockAllOrientations()
     const init = Orientation.getInitialOrientation()
 
     let ds = null
@@ -146,7 +147,6 @@ export default class GiftedListView extends Component {
   }
 
   render() {
-    console.log(this)
     if (this.state.hasOwnProperty('error') && this.state.error == true) {
       return (
         <View style = { styles.empty }>
