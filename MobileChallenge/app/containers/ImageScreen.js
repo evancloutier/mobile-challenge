@@ -5,6 +5,8 @@ import { Text, View, Image, Button, TouchableOpacity, Dimensions, Platform } fro
 import { StackNavigator } from 'react-navigation'
 import Swiper from 'react-native-swiper'
 import Icon from 'react-native-vector-icons/Ionicons'
+import Orientation from 'react-native-orientation'
+import PhotoFooter from '../components/PhotoFooter'
 import styles from './styles/ImageScreenStyle'
 
 const { width, height } = Dimensions.get('window')
@@ -14,11 +16,17 @@ const CONSUMER_KEY = '&consumer_key=QDYiyC7Nqt9ivdwjjgn46rmqVNqlrz21BHUANHED'
 export default class ImageScreen extends Component {
   constructor(props) {
     super(props)
+
+    const init = Orientation.getInitialOrientation()
+
     this.state = {
       page: '',
       key: '',
       items: []
     }
+
+    this._updateOrientation = this._updateOrientation.bind(this)
+    Orientation.addOrientationListener(this._updateOrientation.bind(this))
   }
 
   static navigationOptions = {
@@ -59,6 +67,10 @@ export default class ImageScreen extends Component {
     })
   }
 
+  _updateOrientation(or) {
+
+  }
+
   _transformPhotoArray(photos) {
     let items = []
     for (const row in photos) {
@@ -69,9 +81,9 @@ export default class ImageScreen extends Component {
     return items
   }
 
-  // Build footer independent of the swiper
-  // Need to contain the image to the height and width of the swiper
   render() {
+    const navigationParams = this.props.navigation.state.params
+
     return (
       <View style = { styles.container }>
         <View style = { styles.swiperContainer }>
@@ -84,6 +96,7 @@ export default class ImageScreen extends Component {
             renderNewItems = { this._renderNewItems.bind(this) }
             fetchNextPage = { this._fetchNextPage.bind(this) }>
             { this.state.items.map((item, key) => {
+              console.log(item)
               return (
                 <View key = { key } style = { styles.imageContainer }>
                   <Image resizeMode = 'contain' style = { styles.image } source = {{ uri: item.photo.image_url }}/>
@@ -92,13 +105,22 @@ export default class ImageScreen extends Component {
             })}
           </Swiper>
         </View>
-        <View style = { styles.footer }>
-          <Text style = {{ color: '#fff', fontWeight: '500' }}>This is some centred text</Text>
-        </View>
+        <PhotoFooter
+          avatar = { navigationParams.avatar }
+          photographer = { navigationParams.photographer }
+          created = { navigationParams.created }
+          views = { navigationParams.views }
+          votes = { navigationParams.votes }
+          >
+        </PhotoFooter>
       </View>
 
     )
   }
+
+  // <View style = { styles.footer }>
+  //   <Text style = {{ color: '#fff', fontWeight: '500' }}>This is some centred text</Text>
+  // </View>
 
   _renderNewItems(index, items) {
     let oldItems = this.state.items
@@ -151,7 +173,16 @@ export default class ImageScreen extends Component {
     const statePage = this.state.page
 
     const { setParams } = this.props.navigation
-    setParams({ name: this.state.items[state.index].photo.name })
+    const currentPhoto = this.state.items[state.index]
+
+    setParams({
+      name: currentPhoto.photo.name,
+      avatar: currentPhoto.photo.user.avatars.small.https,
+      photographer: currentPhoto.photo.user.fullname,
+      created: currentPhoto.photo.created_at,
+      views: currentPhoto.photo.times_viewed,
+      votes: currentPhoto.photo.votes_count,
+    })
 
     if (photoPage !== statePage) {
       this._renderNewPage(photoPage)

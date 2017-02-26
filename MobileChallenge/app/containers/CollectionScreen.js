@@ -30,7 +30,7 @@ export default class GiftedCollectionScreen extends Component {
         return resolve(this.buildRows(items))
       })
       .catch((error) => {
-        return reject(error)
+        return resolve(null)
       })
     })
   }
@@ -62,7 +62,9 @@ export default class GiftedCollectionScreen extends Component {
       <TouchableOpacity
         key = { item.id }
         style = {{ width: itemWidth, height: itemHeight }}
-        onPress = { (event) => this.navigation.navigate('Image', { page: page, key: item.id, array: rows, name: item.photo.name }) }
+        onPress = { (event) => this.navigation.navigate('Image', { page: page, key: item.id, array: rows, name: item.photo.name,
+                                                                   avatar: item.photo.user.avatars.small.https, photographer: item.photo.user.fullname,
+                                                                   created: item.photo.created_at, views: item.photo.times_viewed, votes: item.photo.votes_count }) }
       >
         <Image
           style = { styles.photo }
@@ -112,7 +114,6 @@ export default class GiftedCollectionScreen extends Component {
   }
 
   render() {
-    console.log('Rendering...')
     const navigate = this.props.navigation
 
     return (

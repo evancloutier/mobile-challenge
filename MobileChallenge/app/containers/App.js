@@ -3,34 +3,36 @@
 import React, { Component } from 'react'
 import { StackNavigator } from 'react-navigation'
 
-// Import screens here
-import LoginScreen from './LoginScreen'
-import CollectionStack from './CollectionStack'
+import CollectionScreen from './CollectionScreen'
+import ImageScreen from './ImageScreen'
 
 const AppNavigator = StackNavigator({
-  Login: {
-    name: 'Login Screen',
-    description: 'Initial log in screen',
-    screen: LoginScreen,
+  Collection: {
+    name: 'Collection Screen',
+    description: 'Initial screen for viewing photos',
+    screen: CollectionScreen,
     navigationOptions: {
       header: {
-        visible: false,
+        title: 'Popular on 500px',
+        titleStyle: {
+          color: 'white',
+        },
+        style: {
+          backgroundColor: '#2B88DA'
+        }
       }
     }
   },
-  CollectionStack: {
-    name: 'Collection Stack',
-    description: 'StackNavigator for photo collection',
-    screen: CollectionStack,
-    navigationOptions: {
-      header: {
-        visible: false
-      }
-    }
+  Image: {
+    name: 'Full Image Screen',
+    description: 'Scroll view for viewing full-size photos',
+    screen: ImageScreen,
   }
+
+
 }, {
   headerMode: 'screen',
-  initialRouteName: 'Login',
+  initialRouteName: 'Collection',
 })
 
 export default () => <AppNavigator />

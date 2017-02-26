@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 
 import Orientation from 'react-native-orientation'
+import styles from './styles/GiftedListViewStyle'
 
 export default class GiftedListView extends Component {
   constructor (props) {
@@ -53,34 +54,14 @@ export default class GiftedListView extends Component {
     )
   }
 
-  // Potentially use this later for no results found, etc.
-  // emptyView = (refreshCallback) => {
-  //   if (this.props.emptyView) {
-  //     return this.props.emptyView(refreshCallback)
-  //   }
-  //
-  //   return (
-  //     <View style={[defaultStyles.defaultView, this.props.customStyles.defaultView]}>
-  //       <Text style={[defaultStyles.defaultViewTitle, this.props.customStyles.defaultViewTitle]}>
-  //         Sorry, there is no content to display
-  //       </Text>
-  //
-  //       <TouchableHighlight
-  //         underlayColor='#c8c7cc'
-  //         onPress={refreshCallback}
-  //       >
-  //         <Text>
-  //           ↻
-  //         </Text>
-  //       </TouchableHighlight>
-  //     </View>
-  //   )
-  // }
-
   componentDidMount() {
     this.state.isMounted = true
     this.props.onFetch(this._getPage()).then((data) => {
-      this._postRefresh(data, { firstLoad: true })
+      if (data == null) {
+        this.setState({ error: true })
+      } else {
+        this._postRefresh(data, { firstLoad: true })
+      }
     })
   }
 
@@ -112,7 +93,6 @@ export default class GiftedListView extends Component {
     }
   }
 
-  // Need to load enough per page so that this function is not called upon render
   _onEndReached() {
     if (this.state.paginationStatus === 'allLoaded') {
       return null
@@ -167,24 +147,31 @@ export default class GiftedListView extends Component {
 
   render() {
     console.log(this)
+    if (this.state.hasOwnProperty('error') && this.state.error == true) {
+      return (
+        <View style = { styles.empty }>
+          <Text style = { styles.emptyText }>Sorry, there is no data to show!</Text>
+        </View>
+      )
+    } else {
+      return (
+        <ListView
+          ref = "listview"
+          dataSource = { this.state.dataSource }
+          renderRow = { this.props.rowView.bind(this) }
+          contentContainerStyle = {{ paddingBottom: 64 }}
+          automaticallyAdjustContentInsets = { false }
+          scrollEnabled = { this.props.scrollEnabled }
+          onEndReached = { this._onEndReached.bind(this) }
+          onEndReachedThreshold = { Dimensions.get('window').height }
 
-    return (
-      <ListView
-        ref = "listview"
-        dataSource = { this.state.dataSource }
-        renderRow = { this.props.rowView.bind(this) }
-        contentContainerStyle = {{ paddingBottom: 64 }}
-        automaticallyAdjustContentInsets = { false }
-        scrollEnabled = { this.props.scrollEnabled }
-        onEndReached = { this._onEndReached.bind(this) }
-        onEndReachedThreshold = { Dimensions.get('window').height }
-
-        canCancelContentTouches = { true }
-        refreshControl = { this.props.refreshable === true ? this.renderRefreshControl() : null }
-        enableEmptySections = { this.props.enableEmptySections || true }
-        { ...this.props }
-      />
-    )
+          canCancelContentTouches = { true }
+          refreshControl = { this.props.refreshable === true ? this.renderRefreshControl() : null }
+          enableEmptySections = { this.props.enableEmptySections || true }
+          { ...this.props }
+        />
+      )
+    }
   }
 }
 
