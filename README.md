@@ -4,6 +4,19 @@ This is my implementation of the 500px mobile challenge, done in React Native.
 
 Here are some views of my final product:
 
+Android Image View         |  Android Grid View
+:-------------------------:|:-------------------------:
+![][android-image]         |  ![][android-grid]
+
+iPhone Image View          | iPhone Grid View
+:-------------------------:|:-------------------------:
+![][iphone-image]          |  ![][iphone-grid]
+
+[iphone-image]: https://github.com/evancloutier/mobile-challenge/blob/master/gifs/iphone-mobile-challenge-display-image.gif
+[iphone-grid]: https://github.com/evancloutier/mobile-challenge/blob/master/gifs/iphone-mobile-challenge-grid-view.gif
+[android-image]: https://github.com/evancloutier/mobile-challenge/blob/master/gifs/android-mobile-challenge-image-view.gif
+[android-grid]: https://github.com/evancloutier/mobile-challenge/blob/master/gifs/android-mobile-challenge-grid-view.gif
+
 ## Features
 
 - [ ] Navigation stack handled using the new(er) [React Navigation](www.reactnavigation.org) library
